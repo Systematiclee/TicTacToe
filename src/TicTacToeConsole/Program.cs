@@ -1,95 +1,96 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using TicTacToeConsole.src.Models;
 
 namespace TicTacToeConsole
 {
-    internal class Program
+    class Program
     {
         static void Main(string[] args)
         {
-            char userSymbol = 'X';
-            char systemSymbol = 'O';
-            char[,] gameBoard = new char[3, 3];
-
-            Console.WriteLine("You will be playing as X.");
-            Console.WriteLine("The system will be playing as O.\n");
-
-            DisplayGameBoard(gameBoard, userSymbol, systemSymbol);
-
-            bool exit = false;
-            while (!exit)
+            while (true)
             {
-                Console.WriteLine("Game Menu:");
-                Console.WriteLine("1. Place your symbol");
-                Console.WriteLine("2. Exit");
-                Console.Write("Enter your choice (1-2): ");
+                Menu();
 
-                string input = Console.ReadLine();
+                ConsoleHelper.PrintLine("Please choose your symbol (X or O):");
+                char userSymbol = Console.ReadLine().ToUpper()[0];
+                char systemSymbol = userSymbol == 'X' ? 'O' : 'X';
 
-                if (input == "1")
+                Game game = new Game(userSymbol, systemSymbol);
+
+                ConsoleHelper.PrintLine("Who goes first? (1) User (2) System");
+                string firstMoveChoice = Console.ReadLine();
+                bool userFirst = firstMoveChoice == "1";
+
+                if (!userFirst)
                 {
-                    Console.WriteLine("Choose a row and column to place your symbol:");
-                    Console.Write("Enter row coordinate (0-2): ");
-                    int row = int.Parse(Console.ReadLine());
+                    game.SystemMove();
+                }
 
-                    Console.Write("Enter column coordinate (0-2): ");
-                    int col = int.Parse(Console.ReadLine());
+                while (game.State == GameState.Ongoing)
+                {
+                    Console.Clear();
+                    ConsoleHelper.DisplayGameBoard(game.GameBoard);
 
-                    if (gameBoard[row, col] != '\0')
+                    ConsoleHelper.PrintLine("Your turn! Enter row (0, 1, or 2) and column (0, 1, or 2) separated by a space, or type 'exit' to quit: ");
+                    string input = Console.ReadLine();
+                    if (input.ToLower() == "exit")
                     {
-                        Console.WriteLine("That cell is already occupied. Please try again.");
-                        continue;
+                        Environment.Exit(0);
                     }
 
-                    gameBoard[row, col] = userSymbol;
-                    DisplayGameBoard(gameBoard, userSymbol, systemSymbol);
-                }
-                else if (input == "2")
-                {
-                    exit = true;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid choice. Please try again.");
-                }
-            }
+                    string[] inputParts = input.Split(' ');
+                    int row = int.Parse(inputParts[0]);
+                    int col = int.Parse(inputParts[1]);
 
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
-        }
-
-        static void DisplayGameBoard(char[,] gameBoard, char userSymbol, char systemSymbol)
-        {
-            Console.WriteLine("Current Game Board:");
-            Console.WriteLine("   0  1  2");
-            for (int i = 0; i < 3; i++)
-            {
-                Console.Write($"{i} ");
-                for (int j = 0; j < 3; j++)
-                {
-                    if (gameBoard[i, j] == userSymbol)
+                    if (game.UserMove(row, col))
                     {
-                        Console.Write($"[{userSymbol}]");
-                    }
-                    else if (gameBoard[i, j] == systemSymbol)
-                    {
-                        Console.Write($"[{systemSymbol}]");
+                        game.State = game.CheckGameState();
+                        if (game.State == GameState.Ongoing)
+                        {
+                            Console.Clear();
+                            ConsoleHelper.DisplayGameBoard(game.GameBoard);
+                            ConsoleHelper.PrintLine("System's turn:");
+                            game.SystemMove();
+                            game.State = game.CheckGameState();
+                        }
                     }
                     else
                     {
-                        Console.Write("[ ]");
+                        ConsoleHelper.PrintLine("Invalid move. Try again.");
                     }
                 }
-                Console.WriteLine();
+
+                Console.Clear();
+                ConsoleHelper.DisplayGameBoard(game.GameBoard);
+                ConsoleHelper.PrintLine(game.State == GameState.UserWon ? "Congratulations! You won!" : game.State == GameState.SystemWon ? "System won!" : "It's a draw!");
+                ConsoleHelper.PrintLine("Press any key to continue...");
+                Console.ReadKey();
+            }
+        }
+
+        private static void Menu()
+        {
+            bool exit = false;
+            while (!exit)
+            {
+                Console.Clear();
+                ConsoleHelper.PrintLine("Welcome to Tic Tac Toe!");
+                ConsoleHelper.PrintLine("1. Start game");
+                ConsoleHelper.PrintLine("2. Exit");
+
+                string menuChoice = Console.ReadLine();
+
+                if (menuChoice == "1") return;
+                else if (menuChoice == "2")
+                {
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    ConsoleHelper.PrintLine("Invalid Input");
+                }
             }
         }
     }
 }
-
-
-
-
 
