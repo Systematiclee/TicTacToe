@@ -1,7 +1,13 @@
+/*
+ * This file contains the ConsoleHelper class which provides helper methods for console input/output related to the game.
+ */
 using System;
 
 namespace TicTacToeConsole.src.Models 
 {
+    /*
+     * The ConsoleHelper class provides helper methods for console input/output related to the game.
+     */
     public static class ConsoleHelper
     {
         // A method that displays the current game board in the console.

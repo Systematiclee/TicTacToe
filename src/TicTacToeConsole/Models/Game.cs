@@ -1,3 +1,9 @@
+/*
+ * This file defines the Game class and the GameState enum.
+ * The Game class provides the core logic for the game and manages the game state.
+ * The GameState enum represents the possible states of the game.
+ */
+
 using System;
 
 
@@ -11,6 +17,10 @@ namespace TicTacToeConsole.src.Models
         SystemWon
     }
 
+    /*
+     * The Game class provides the core logic for the game and manages the game state.
+     * It defines the properties and methods needed to play the game.
+     */
     public class Game
     {
         // Properties of the game
