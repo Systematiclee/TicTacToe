@@ -48,11 +48,20 @@ namespace TicTacToeConsole.src.Models
             // Print an empty string to move the cursor to the next line.
             PrintLine("");
         }
-        public static void Print(string message)
+
+        /// <summary>
+        /// This method prints a message to the console without adding a new line at the end.
+        /// </summary>
+        /// <param name="message">The message to be printed.</param>
+        private static void Print(string message)
         {
             Console.Write(message);
         }
 
+        /// <summary>
+        /// This method prints a message to the console and adds a new line at the end.
+        /// </summary>
+        /// <param name="message">The message to be printed.</param>
         public static void PrintLine(string message)
         {
             Console.WriteLine(message);
