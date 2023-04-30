@@ -9,6 +9,15 @@ using System;
 
 namespace TicTacToeConsole.src.Models
 {
+    /*
+    The GameState enum represents the different states of the Tic Tac Toe game.
+    
+    List of Enum Values:
+    - Ongoing: The game is still ongoing and no player has won yet.
+    - Draw: The game ended in a draw.
+    - UserWon: The user won the game.
+    - SystemWon: The system won the game.
+    */
     public enum GameState 
     {
         Ongoing,
@@ -24,15 +33,15 @@ namespace TicTacToeConsole.src.Models
     public class Game
     {
         // Properties of the game
-        public char[,] GameBoard { get; set; }
+        private char[,] GameBoard { get; set; }
         public Player User { get; set; }
         public Player System { get; set; }
-        public GameState State { get; set; }
+        private GameState State { get; set; }
 
-        public int UserWins { get; private set; }
-        public int SystemWins { get; private set; }
-        public int Draws { get; private set; }
-        public DateTime GameStartTime { get; private set; }
+        protected int UserWins { get; private set; }
+        protected int SystemWins { get; private set; }
+        protected int Draws { get; private set; }
+        protected DateTime GameStartTime { get; private set; }
 
         // Constructor of the game
         public Game(char userSymbol, char systemSymbol)
@@ -46,12 +55,10 @@ namespace TicTacToeConsole.src.Models
             Draws = 0;
         }
 
-        // Shutdown method that displays statistics and run-time statistics
-        public void Shutdown()
-        {
-            DisplayStatistics();
-            DisplayRunTimeStatistics();
-        }
+        /// <summary>
+        /// Starts a new game of Tic-Tac-Toe.
+        /// </summary>
+        /// <returns>Returns true if the user exits the game early.</returns>
         public bool StartGame()
         {
             ResetGame(); // Reset the game board and state
@@ -92,6 +99,7 @@ namespace TicTacToeConsole.src.Models
                 int row = int.Parse(inputParts[0]);
                 int col = int.Parse(inputParts[1]);
 
+                // Check if the user's move is valid, and if it is, check the game's state
                 if (UserMove(row, col))
                 {
                     State = CheckGameState();
@@ -131,15 +139,18 @@ namespace TicTacToeConsole.src.Models
         }
 
         //Resets the board when a new game is started
-        public void ResetGame()
+        private void ResetGame()
         {
             GameBoard = new char[3, 3];
             State = GameState.Ongoing;
         }
 
         // Logic for the users move
-        public bool UserMove(int row, int col)
+        private bool UserMove(int row, int col)
         {
+
+
+
             if (GameBoard[row, col] == '\0')
             {
                 GameBoard[row, col] = User.Symbol;
@@ -149,7 +160,7 @@ namespace TicTacToeConsole.src.Models
         }
 
         //Logic for the systems move
-        public void SystemMove()
+        private void SystemMove()
         {
             bool placedSymbol = false;
             while (!placedSymbol)
@@ -167,8 +178,11 @@ namespace TicTacToeConsole.src.Models
             }
         }
 
-        
-        public GameState CheckGameState()
+        /// <summary>
+        /// Check the game's state by checking for a win or draw.
+        /// </summary>
+        /// <returns>The current game state.</returns>
+        private GameState CheckGameState()
         {
             if (CheckWin(User))
             {
@@ -188,7 +202,9 @@ namespace TicTacToeConsole.src.Models
             }
         }
 
-        // Logic for Checking for wins
+        // This method checks if a player has won the game
+        // It takes in a Player object and checks if the player's symbol exists in any row, column, or diagonal of the game board
+        // Returns true if the player has won, false otherwise
         private bool CheckWin(Player player)
         {
             char symbol = player.Symbol;
@@ -242,7 +258,7 @@ namespace TicTacToeConsole.src.Models
         }
 
         // Logic for displaying the games statistics
-        public void DisplayStatistics()
+        private void DisplayStatistics()
         {
             ConsoleHelper.PrintLine("Game Statistics:");
             if (UserWins + SystemWins + Draws == 0)
@@ -258,7 +274,7 @@ namespace TicTacToeConsole.src.Models
         }
 
         // logic for displaying time played
-        public void DisplayRunTimeStatistics()
+        private void DisplayRunTimeStatistics()
         {
             int totalGames = UserWins + SystemWins + Draws;
             TimeSpan totalTimePlayed = DateTime.Now - GameStartTime;
@@ -275,15 +291,18 @@ namespace TicTacToeConsole.src.Models
         {
             Game game = null; // create a variable to hold the game instance
 
+            // loop for the main menu
             while (true)
             {
                 Console.Clear();
                 ConsoleHelper.PrintLine("Welcome to Tic Tac Toe!");
                 ConsoleHelper.PrintLine("1. Start game");
-                ConsoleHelper.PrintLine("2. Shutdown and show play statistics");
+                ConsoleHelper.PrintLine("2. Show Statistic");
+                ConsoleHelper.PrintLine("3. Shutdown");
 
                 string menuChoice = Console.ReadLine();
 
+                // Check if user wants to start a new game
                 if (menuChoice == "1")
                 {
                     // create a new instance of the game if one does not exist
@@ -304,7 +323,17 @@ namespace TicTacToeConsole.src.Models
                     {
                         game.DisplayStatistics();
                         game.DisplayRunTimeStatistics();
+                        Console.ReadLine();
                     }
+                    else
+                    {
+                        ConsoleHelper.PrintLine("No games played...");
+                        Console.ReadLine();
+                    }
+                }
+                // Check if user wants to view game statistics
+                else if (menuChoice == "3")
+                {
 
                     ConsoleHelper.PrintLine("Press any key to exit...");
                     Console.ReadKey();
