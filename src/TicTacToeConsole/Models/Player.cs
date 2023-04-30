@@ -1,26 +1,29 @@
 namespace TicTacToeConsole.src.Models
 {
     /*
-     The Player class represents a player in the Tic Tac Toe game.
+     The Player struct represents a player in the Tic Tac Toe game.
+     It is a lightweight value type that can be used for representing 
+     simple objects that have no identity.
     */
-    public class Player
+    public struct Player
     {
         /*
-          Gets or sets the symbol representing the player in the game.
+          Gets the symbol representing the player in the game.
          */
-        public bool IsUser { get; private set; }
-        public char Symbol { get; private set; }
-
+        public char Symbol { get; }
+        
 
         /**
-         * Initializes a new instance of the Player class with the given 'isUser' and 'symbol' values.
+         * Initializes a new instance of the Player struct with the given 'isUser' and 'symbol' values.
          * 
          * isUser: A boolean indicating whether the player is a user or not.
          * symbol: The symbol representing the player in the game.
          */
+
         public Player(bool isUser, char symbol)
         {
-            IsUser = isUser;
+            // Set the Symbol property of the struct
+            
             Symbol = symbol;
         }
     }

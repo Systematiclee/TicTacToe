@@ -20,7 +20,8 @@ namespace TicTacToeConsole
 
                 gameInstance = new Game(userSymbol, systemSymbol);
 
-                bool userExited = gameInstance.StartGame(); // Call the StartGame method and store the returned value
+                // Call the StartGame method and store the returned value
+                bool userExited = gameInstance.StartGame(); 
 
                 if (userExited)
                 {
